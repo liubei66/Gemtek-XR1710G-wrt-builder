@@ -10,6 +10,13 @@ PKG_CONF="$GITHUB_WORKSPACE/packages/openwrt.conf"
 # sed -i '/CONFIG_PACKAGE_kmod-usb-ohci/d' .config
 sed -i '/CONFIG_PACKAGE_mihomo-alpha/d' .config
 
+
+# ===== 拉theme包 =====
+cd package && \
+git clone https://github.com/rchen14b/luci-theme-glass && \
+git clone https://github.com/jerrykuku/luci-theme-argon && \
+cd ..
+
 # ===== UCI 默认值示例 ======
 # mkdir -p openwrt/files/etc/uci-defaults
 # cat > openwrt/files/etc/uci-defaults/99-custom << 'UCIEOF'
