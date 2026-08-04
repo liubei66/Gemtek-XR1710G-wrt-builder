@@ -11,11 +11,12 @@ PKG_CONF="$GITHUB_WORKSPACE/packages/openwrt.conf"
 sed -i '/CONFIG_PACKAGE_mihomo-alpha/d' .config
 
 
-# ===== 拉theme包 =====
+# ===== 拉自定义包 =====
 cd package && \
-git clone https://github.com/rchen14b/luci-theme-glass && \
-git clone https://github.com/jerrykuku/luci-theme-argon && \
-cd ..
+rm -rf luci-theme-glass && git clone https://github.com/rchen14b/luci-theme-glass && \
+rm -rf luci-theme-argon && git clone https://github.com/jerrykuku/luci-theme-argon && \
+rm -rf luci-app-lucky && git clone https://github.com/whzhni1/luci-app-lucky && \
+cd .. && ./scripts/feeds install -a
 
 # ===== UCI 默认值示例 ======
 # mkdir -p openwrt/files/etc/uci-defaults
