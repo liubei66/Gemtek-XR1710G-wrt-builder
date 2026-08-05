@@ -103,14 +103,15 @@ jobs:
         if: ${{ env.TARGET == 'immortalwrt' }}
         run: cp feeds.d/immortalwrt openwrt/feeds.conf
 
-      - name: DIY part1 — 版本号
-        run: |
-          chmod +x scripts/diy-part1.sh
-          cd openwrt && "$GITHUB_WORKSPACE/scripts/diy-part1.sh"
 
       - name: 更新 feeds
         run: cd openwrt && ./scripts/feeds update -a
 
+      - name: DIY part1
+        run: |
+          chmod +x scripts/diy-part1.sh
+          cd openwrt && "$GITHUB_WORKSPACE/scripts/diy-part1.sh"
+        
       - name: 安装 feeds
         run: cd openwrt && ./scripts/feeds install -a
 

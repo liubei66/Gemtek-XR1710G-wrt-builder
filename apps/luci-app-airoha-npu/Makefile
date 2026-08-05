@@ -2,21 +2,21 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=luci-app-airoha-npu
+LUCI_NAME:=luci-app-airoha-npu
 PKG_VERSION:=1.1.0
 PKG_RELEASE:=1
 PKG_LICENSE:=Apache-2.0
 PKG_MAINTAINER:=XR1710G Maintainer
-TITLE:=LuCI Airoha XR1710G NPU Status (NPU, CPU, Frame Engine)
+TITLE:=LuCI Airoha XR1710G NPU Status
 
-LUCI_TITLE:=LuCI Airoha XR1710G NPU Status (NPU, CPU, Frame Engine)
+LUCI_TITLE:=LuCI Airoha XR1710G NPU Status
 LUCI_DESCRIPTION:=Displays real-time Airoha XR1710G NPU status including NPU utilization, \
 	CPU frequency and load, frame engine statistics, and supports CPU overclocking.
-LUCI_DEPENDS:=+luci-base @TARGET_airoha
+LUCI_DEPENDS:=+luci-base
 
 include $(TOPDIR)/feeds/luci/luci.mk
 
-define Package/$(PKG_NAME)/install
+define Package/$(LUCI_NAME)/install
 	# Install LuCI frontend views
 	$(INSTALL_DIR) $(1)/www/luci-static/resources/view/airoha_npu
 	$(INSTALL_DATA) ./htdocs/luci-static/resources/view/airoha_npu/status.js $(1)/www/luci-static/resources/view/airoha_npu/
@@ -34,7 +34,7 @@ define Package/$(PKG_NAME)/install
 	$(INSTALL_DATA) ./root/usr/share/rpcd/acl.d/luci-app-airoha-npu.json $(1)/usr/share/rpcd/acl.d/
 endef
 
-define Package/$(PKG_NAME)/postinst
+define Package/$(LUCI_NAME)/postinst
 #!/bin/sh
 [ -n "$${IPKG_INSTROOT}" ] && exit 0
 
@@ -48,7 +48,7 @@ rm -rf /tmp/luci-modulecache/
 exit 0
 endef
 
-define Package/$(PKG_NAME)/prerm
+define Package/$(LUCI_NAME)/prerm
 #!/bin/sh
 [ -n "$${IPKG_INSTROOT}" ] && exit 0
 
@@ -58,4 +58,4 @@ define Package/$(PKG_NAME)/prerm
 exit 0
 endef
 
-$(eval $(call BuildPackage,$(PKG_NAME)))
+# call BuildPackage - OpenWrt buildroot signature
