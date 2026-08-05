@@ -20,7 +20,6 @@ rm -rf package/feeds/video/sdl3-*
 rm -rf feeds/video/video/sdl3*
 rm -rf feeds/luci/applications/luci-app-clientstatus
 rm -rf package/feeds/luci/luci-app-clientstatus
-
 rm -rf package/lucky
 rm -rf feeds/luci/luci-theme-argon
 
@@ -36,9 +35,3 @@ sed -i '/CONFIG_PACKAGE_luci-app-clientstatus/d' .config
 sed -i '/CONFIG_PACKAGE_mihomo-alpha/d' .config
 
 
-# ===== 拉自定义包 =====
-cd package && \
-rm -rf luci-theme-glass && git clone https://github.com/rchen14b/luci-theme-glass && \
-rm -rf luci-theme-argon && git clone https://github.com/jerrykuku/luci-theme-argon && \
-rm -rf luci-app-lucky && git clone https://github.com/whzhni1/luci-app-lucky && \
-cd .. && ./scripts/feeds install -a
