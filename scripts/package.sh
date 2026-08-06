@@ -16,13 +16,13 @@ pushd package/small
 
 
 # luci-app-nft-timecontrol
-git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-timecontrol.git
+git clone https://github.com/sirpdboy/luci-app-timecontrol.git
 
 # VIKINGYFY/packages
-git clone -b main --depth 1 https://github.com/VIKINGYFY/packages.git
+git clone https://github.com/VIKINGYFY/packages.git
 
 # daed
-git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
+git clone https://github.com/QiuSimons/luci-app-daed.git
 
 
 popd
