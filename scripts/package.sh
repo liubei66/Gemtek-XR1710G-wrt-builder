@@ -4,7 +4,6 @@
 rm -rf ./feeds/packages/net/{geoview,chinadns-ng,hysteria,mosdns,v2ray-geodata,lucky}
 rm -rf ./feeds/packages/net/{shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev}
 rm -rf ./feeds/packages/net/{sing-box,v2ray-geodata,v2ray-plugin,xray-core,smartdns}
-
 rm -rf ./feeds/luci/applications/{luci-app-passwall,luci-app-passwall2,luci-app-openclash,luci-app-homeproxy}
 rm -rf ./feeds/luci/applications/{luci-app-lucky,luci-app-smartdns,luci-app-timecontrol,luci-app-mosdns}
 rm -rf ./feeds/luci/applications/{luci-app-nikki,luci-app-momo,luci-app-daed}
@@ -15,7 +14,7 @@ mkdir package/small
 pushd package/small
 
 
-# luci-app-nft-timecontrol
+# luci-app-timecontrol
 git clone https://github.com/sirpdboy/luci-app-timecontrol.git
 
 # VIKINGYFY/packages
@@ -23,6 +22,9 @@ git clone https://github.com/VIKINGYFY/packages.git
 
 # daed
 git clone https://github.com/QiuSimons/luci-app-daed.git
+
+#passwall package
+git clone https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git
 
 
 popd
