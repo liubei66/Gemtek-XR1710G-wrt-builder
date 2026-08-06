@@ -1,4 +1,4 @@
-name: Build Airoha_an7581-Wrt
+name: Build x86_64-Wrt
 
 permissions:
   contents: write
