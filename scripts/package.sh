@@ -23,6 +23,8 @@ git clone https://github.com/VIKINGYFY/packages.git
 # daed
 git clone https://github.com/QiuSimons/luci-app-daed.git
 
+npm install -g pnpm
+
 #passwall package
 git clone https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git
 
