@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# 删除feeds中的插件
+rm -rf ./feeds/packages/net/{geoview,chinadns-ng,hysteria,mosdns,v2ray-geodata,lucky}
+rm -rf ./feeds/packages/net/{shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev}
+rm -rf ./feeds/packages/net/{sing-box,v2ray-geodata,v2ray-plugin,xray-core,smartdns}
+
+rm -rf ./feeds/luci/applications/{luci-app-passwall,luci-app-passwall2,luci-app-openclash,luci-app-homeproxy}
+rm -rf ./feeds/luci/applications/{luci-app-lucky,luci-app-smartdns,luci-app-timecontrol,luci-app-mosdns}
+rm -rf ./feeds/luci/applications/{luci-app-nikki,luci-app-momo,luci-app-daed}
+
+
+# 克隆的源码放在small文件夹
+mkdir package/small
+pushd package/small
+
+
+# luci-app-nft-timecontrol
+git clone -b main --depth 1 https://github.com/sirpdboy/luci-app-timecontrol.git
+
+# VIKINGYFY/packages
+git clone -b main --depth 1 https://github.com/VIKINGYFY/packages.git
+
+# daed
+git clone -b master --depth 1 https://github.com/QiuSimons/luci-app-daed.git
+
+
+popd
+
+echo "packages executed successfully!"
