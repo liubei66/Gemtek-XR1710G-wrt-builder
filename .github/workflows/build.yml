@@ -254,8 +254,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: steps.tag.outputs.status == 'success' && !cancelled()
         with:
-          tag_name: ${{ env.TARGET }}_${{ steps.tag.outputs.release_tag }}
-          name: ${{ env.TARGET == 'openwrt' && 'OpenWrt' || 'ImmortalWrt' }} ${{ steps.tag.outputs.release_tag }}
+          tag_name: ${{ env.TARGET }}_${{ env.ARCHITECTURE }}_${{ steps.tag.outputs.release_tag }}
+          name: ${{ env.TARGET == 'openwrt' && 'OpenWrt' || 'ImmortalWrt' }} ${{ env.ARCHITECTURE }} ${{ steps.tag.outputs.release_tag }}
           body_path: release.txt
           files: ${{ env.FIRMWARE }}/*
 
