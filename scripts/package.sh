@@ -31,4 +31,8 @@ git clone https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git
 
 popd
 
+
+
+sed -i 's#admin/services/ksmbd#admin/nas/ksmbd#g' package/feeds/luci/luci-app-ksmbd/root/usr/share/luci/menu.d/luci-app-ksmbd.json
+
 echo "packages executed successfully!"
