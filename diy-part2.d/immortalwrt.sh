@@ -35,3 +35,6 @@ sed -i '/CONFIG_PACKAGE_luci-app-clientstatus/d' .config
 sed -i '/CONFIG_PACKAGE_mihomo-alpha/d' .config
 
 
+sed -i 's#admin/services/ksmbd#admin/nas/ksmbd#g' ./package/feeds/luci/luci-app-ksmbd/root/usr/share/luci/menu.d/luci-app-ksmbd.json
+
+
