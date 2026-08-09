@@ -15,6 +15,9 @@ date_version=$(date +"%Y%m%d%H")
 [ -d package/OpenWrt-nikki ] && rm -rf package/OpenWrt-nikki
 git clone https://github.com/nikkinikki-org/OpenWrt-nikki.git package/OpenWrt-nikki
 
+[ -d package/openwrt-passwall ] && rm -rf package/openwrt-passwall
+git clone https://github.com/Openwrt-Passwall/openwrt-passwall-packages.git package/openwrt-passwall
+
 [ -d package/app-run ] && rm -rf package/app-run
 git clone https://github.com/wukongdaily/luci-app-run.git package/app-run
 
