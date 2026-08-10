@@ -7,6 +7,7 @@ date_version=$(date +"%Y%m%d%H")
 
 # 删除feeds中的插件
 [ -d package/lucky ] && rm -rf package/lucky
+[ -d package/feeds/luci/luci-mod-system ] && rm -rf package/feeds/luci/luci-mod-system
 [ -d feeds/luci/luci-theme-argon ] && rm -rf feeds/luci/luci-theme-argon
 rm -rf ./package/feeds/packages/net/{geoview,chinadns-ng,hysteria,mosdns,v2ray-geodata,lucky}
 rm -rf ./package/feeds/packages/net/{shadowsocks-libev,shadowsocks-rust,shadowsocksr-libev}
