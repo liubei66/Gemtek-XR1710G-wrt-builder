@@ -4,12 +4,11 @@
 
 # ===== 追加第三方插件包（不影响 .config 主文件）=====
 PKG_CONF="$GITHUB_WORKSPACE/packages/openwrt.conf"
-[ -f "$PKG_CONF" ] && grep -v '^#' "$PKG_CONF" | grep -v '^$' >> .config && echo "已加载第三方插件: openwrt" || true
+[ -f "$PKG_CONF" ] && grep -v '^#' "$PKG_CONF" | grep -v '^$' >>.config && echo "已加载第三方插件: openwrt" || true
 
 # ===== 修改内核选项示例 =====
 # sed -i '/CONFIG_PACKAGE_kmod-usb-ohci/d' .config
 sed -i '/CONFIG_PACKAGE_mihomo-alpha/d' .config
-
 
 # ===== UCI 默认值示例 ======
 # mkdir -p openwrt/files/etc/uci-defaults
