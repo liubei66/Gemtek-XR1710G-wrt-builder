@@ -110,8 +110,7 @@ jobs:
         run: |
           chmod +x scripts/*.sh
           cd openwrt && "$GITHUB_WORKSPACE/scripts/diy-part1.sh"
-          [ -f $GITHUB_WORKSPACE/scripts/package.sh ] && "$GITHUB_WORKSPACE/scripts/package.sh"
-        
+
       - name: 安装 feeds
         run: cd openwrt && ./scripts/feeds install -a
 
