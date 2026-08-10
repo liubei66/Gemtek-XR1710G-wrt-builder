@@ -227,8 +227,7 @@ jobs:
         id: tag
         if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
         run: |
-          # 仅保留年月日作为标签
-          echo "release_tag=$(date +'%Y.%m.%d')" >> $GITHUB_OUTPUT
+          echo "release_tag=$(date +'%Y.%m.%d_%H%M%S')" >> $GITHUB_OUTPUT
           
           # 转换发行版显示名称
           TARGET_ENV="${{ env.TARGET }}"
@@ -273,5 +272,5 @@ jobs:
         run: |
           gh release list --limit 100 --json tagName,publishedAt --jq '.[] | "\(.tagName)"' | \
             grep "^${{ env.TARGET }}_" | \
-            tail -n +5 | \
+            tail -n +30 | \
             xargs -I {} gh release delete {} --yes --cleanup-tag || true
