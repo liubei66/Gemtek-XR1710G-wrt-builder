@@ -15,16 +15,7 @@ rm -rf ./package/feeds/luci/applications/{luci-app-passwall,luci-app-passwall2,l
 rm -rf ./package/feeds/luci/applications/{luci-app-lucky,luci-app-smartdns,luci-app-timecontrol,luci-app-mosdns}
 rm -rf ./package/feeds/luci/applications/{luci-app-nikki,luci-app-momo,luci-app-daed,luci-app-dae,luci-theme-argon}
 
-# 克隆的源码放在small文件夹
-mkdir package/small
-pushd package/small
 
-# luci-app-timecontrol
-git clone https://github.com/sirpdboy/luci-app-timecontrol.git
-
-npm install -g pnpm
-
-popd
 
 
 # ===== 拉自定义包 =====
@@ -58,6 +49,18 @@ git clone https://github.com/whzhni1/luci-app-lucky package/luci-app-lucky
 
 [ -d package/openwrt-daede ] && rm -rf package/openwrt-daede
 git clone https://github.com/kenzok8/openwrt-daede.git package/openwrt-daede
+
+
+# 克隆的源码放在small文件夹
+mkdir package/small
+pushd package/small
+
+# luci-app-timecontrol
+git clone https://github.com/sirpdboy/luci-app-timecontrol.git
+
+npm install -g pnpm
+
+popd
 
 
 
