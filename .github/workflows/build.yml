@@ -12,6 +12,14 @@ on:
         description: 'SSH connection to Actions'
         required: false
         default: 'false'
+      ap:
+        description: 'Select which ap or common'
+        required: true
+        type: choice
+        options:
+          - ap
+          - common
+        default: ap
       target:
         description: 'Select which distro to build'
         required: true
@@ -27,6 +35,7 @@ env:
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
   WRT_NAME: ${{ (inputs.target == 'openwrt') && 'OpenWrt' || 'ImmortalWrt' }}
+  IS_AP: ${{ (inputs.ap == 'ap') && 'ap' || 'common' }}
   TZ: Asia/Shanghai
   DIY_P2_DIR: diy-part2.d
   TARGET: ${{ github.event.inputs.target }}
@@ -119,9 +128,13 @@ jobs:
         if: ${{ env.TARGET == 'openwrt' }}
         run: cp configs/openwrt.config openwrt/.config
 
-      - name: 加载配置 — ImmortalWrt
-        if: ${{ env.TARGET == 'immortalwrt' }}
+      - name: 加载common配置 — ImmortalWrt
+        if: ${{ env.TARGET == 'immortalwrt' && env.IS_AP == 'common'}}
         run: cp configs/immortalwrt.config openwrt/.config
+
+      - name: 加载ap配置 — ImmortalWrt
+        if: ${{ env.TARGET == 'immortalwrt' && env.IS_AP == 'ap'}}
+        run: cp configs/immortalwrt_ap.config openwrt/.config
 
       - name: DIY part2 — OpenWrt
         if: ${{ env.TARGET == 'openwrt' }}
