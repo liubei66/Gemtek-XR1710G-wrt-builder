@@ -69,11 +69,11 @@ jobs:
         if: ${{ env.TARGET == 'immortalwrt' }}
         env:
           REPO_URL: https://github.com/immortalwrt/immortalwrt
-          REPO_BRANCH: openwrt-25.12
+          REPO_BRANCH: master
         run: |
           df -hT $PWD
           git clone $REPO_URL -b $REPO_BRANCH openwrt
-          cd openwrt && git checkout 4a5c6b9 && cd ..
+          #cd openwrt && git checkout 4a5c6b9 && cd ..
           chmod -R +x openwrt/
           ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
