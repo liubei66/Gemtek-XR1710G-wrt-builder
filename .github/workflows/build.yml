@@ -83,7 +83,7 @@ jobs:
           df -hT $PWD
           git clone $REPO_URL -b $REPO_BRANCH openwrt
           #cd openwrt && git checkout 6f3065c && cd ..
-          cd openwrt && git checkout 6642078 && rm -f target/linux/generic/pending-6.18/991-net-neigh-Reallocate-headroom-if-necessary-in-neigh_.patch && rm -f package/network/services/hostapd/patches/053-nl80211-Avoid-bogus-ENFILE-with-use_existing.patch && cd ..
+          cd openwrt && git checkout a60889b && cd ..
           chmod -R +x openwrt/
           ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
