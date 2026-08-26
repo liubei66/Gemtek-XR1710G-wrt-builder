@@ -1,0 +1,233 @@
+#!/bin/sh /etc/rc.common
+
+START=45
+STOP=99
+USE_PROCD=1
+
+NAME="nfs"
+CONF="nfs"
+
+is_mountpoint() {
+    local target="$1"
+
+    awk -v target="$target" '$2 == target { found=1 } END { exit !found }' \
+        /proc/mounts
+}
+
+get_mount_source() {
+    local target="$1"
+
+    awk -v target="$target" '$2 == target { print $1; exit }' \
+        /proc/mounts
+}
+
+_gen_share_line() {
+    local section="$1"
+    local outfile="$2"
+
+    local enabled path clients options
+
+    config_get_bool enabled "$section" enabled 0
+    config_get path "$section" path
+    config_get clients "$section" clients
+    config_get options "$section" options
+
+    [ "$enabled" = "1" ] || return 0
+    [ -n "$path" ] || return 0
+    [ -n "$clients" ] || return 0
+
+    printf '%s\t%s(%s)\n' \
+        "$path" "$clients" "$options" >> "$outfile"
+}
+
+gen_expected_exports() {
+    local tmp
+
+    tmp="$(mktemp /tmp/nfs.exports.XXXXXX)" || return 1
+
+    config_load "$CONF"
+    config_foreach _gen_share_line share "$tmp"
+
+    printf '%s\n' "$tmp"
+}
+
+sync_nfs_shares() {
+    local tmp_exp
+    local tmp_old
+
+    tmp_exp="$(gen_expected_exports)" || return 1
+    tmp_old="$(mktemp /tmp/nfs.exports.old.XXXXXX)" || {
+        rm -f "$tmp_exp"
+        return 1
+    }
+
+    if [ -s "$tmp_exp" ]; then
+        while IFS= read -r line; do
+            [ -n "$line" ] || continue
+
+            awk -v line="$line" '$0 != line' /etc/exports > "$tmp_old"
+            cat "$tmp_old" > /etc/exports
+        done < "$tmp_exp"
+    fi
+
+    if [ -s "$tmp_exp" ]; then
+        cat "$tmp_exp" >> /etc/exports
+    fi
+
+    rm -f "$tmp_exp" "$tmp_old"
+
+    exportfs -r
+}
+
+nfs_share() {
+    local section="$1"
+
+    local enabled path clients options
+    local line
+
+    config_get_bool enabled "$section" enabled 0
+    config_get path "$section" path
+    config_get clients "$section" clients
+    config_get options "$section" options
+
+    [ -n "$path" ] || return 0
+    [ -n "$clients" ] || return 0
+
+    line="$(printf '%s\t%s(%s)' "$path" "$clients" "$options")"
+
+    if [ "$enabled" = "1" ]; then
+        if ! grep -qxF "$line" /etc/exports 2>/dev/null; then
+            printf '%s\n' "$line" >> /etc/exports
+            exportfs -r
+        fi
+    else
+        awk -v line="$line" '$0 != line' /etc/exports > /tmp/exports.$$ &&
+            cat /tmp/exports.$$ > /etc/exports
+
+        rm -f /tmp/exports.$$
+
+        exportfs -r
+    fi
+}
+
+nfs_share_stop() {
+    exportfs -au >/dev/null 2>&1
+    exportfs -r >/dev/null 2>&1
+}
+
+nfs_mount() {
+    local section="$1"
+
+    local enabled target source options delay
+    local curr_src
+
+    config_get_bool enabled "$section" enabled 0
+    config_get target "$section" target
+    config_get source "$section" source
+    config_get options "$section" options
+    config_get delay "$section" delay
+
+    [ -n "$target" ] || return 0
+    [ -n "$source" ] || return 0
+
+    if [ "$enabled" = "1" ]; then
+
+        if [ -n "$delay" ] && [ "$delay" -gt 0 ] 2>/dev/null; then
+            logger -t NetMount "Sleep $delay seconds before mounting $source"
+            sleep "$delay"
+        fi
+
+        if is_mountpoint "$target"; then
+            curr_src="$(get_mount_source "$target")"
+
+            if [ "$curr_src" != "$source" ]; then
+                logger -t NetMount \
+                    "Mount source changed: $target: $curr_src -> $source"
+
+                umount -f "$target" >/dev/null 2>&1
+            else
+                logger -t NetMount \
+                    "Already mounted: $source -> $target"
+
+                return 0
+            fi
+        fi
+
+        mkdir -p "$target"
+
+        logger -t NetMount \
+            "Mounting NFS: $source -> $target"
+
+        if [ -n "$options" ]; then
+            mount -t nfs -o "$options" "$source" "$target"
+        else
+            mount -t nfs "$source" "$target"
+        fi
+
+        if [ "$?" -ne 0 ]; then
+            logger -t NetMount \
+                "ERROR: Failed to mount $source -> $target"
+            return 1
+        fi
+
+        logger -t NetMount \
+            "Mounted successfully: $source -> $target"
+
+    else
+
+        if is_mountpoint "$target"; then
+            logger -t NetMount \
+                "Unmounting NFS: $target"
+
+            umount -f "$target" >/dev/null 2>&1
+
+            if [ "$?" -eq 0 ]; then
+                logger -t NetMount \
+                    "Unmounted successfully: $target"
+            else
+                logger -t NetMount \
+                    "ERROR: Failed to unmount $target"
+                return 1
+            fi
+        else
+            logger -t NetMount \
+                "Already unmounted: $target"
+        fi
+
+        if [ -n "$delay" ] && [ "$delay" -gt 0 ] 2>/dev/null; then
+            sleep "$delay"
+        fi
+    fi
+}
+
+stop_service() {
+    local mp
+
+    awk '$3 ~ /^nfs/ {print $2}' /proc/mounts |
+    while IFS= read -r mp; do
+        [ -n "$mp" ] || continue
+
+        logger -t NetMount "Stopping NFS mount: $mp"
+        umount -f "$mp" >/dev/null 2>&1
+    done
+
+    nfs_share_stop
+}
+
+start_service() {
+    config_load "$CONF"
+
+    config_foreach nfs_share share
+    config_foreach nfs_mount mount
+}
+
+reload_service() {
+    config_load "$CONF"
+
+    sync_nfs_shares
+    config_foreach nfs_mount mount
+}
+
+service_triggers() {
+    procd_add_reload_trigger "$CONF"
+}
