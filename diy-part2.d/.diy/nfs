@@ -36,8 +36,13 @@ _gen_share_line() {
     [ -n "$path" ] || return 0
     [ -n "$clients" ] || return 0
 
-    printf '%s\t%s(%s)\n' \
-        "$path" "$clients" "$options" >> "$outfile"
+    if [ -n "$options" ]; then
+        printf '%s\t%s(%s)\n' \
+            "$path" "$clients" "$options" >> "$outfile"
+    else
+        printf '%s\t%s\n' \
+            "$path" "$clients" >> "$outfile"
+    fi
 }
 
 gen_expected_exports() {
@@ -53,61 +58,14 @@ gen_expected_exports() {
 
 sync_nfs_shares() {
     local tmp_exp
-    local tmp_old
 
     tmp_exp="$(gen_expected_exports)" || return 1
-    tmp_old="$(mktemp /tmp/nfs.exports.old.XXXXXX)" || {
-        rm -f "$tmp_exp"
-        return 1
-    }
 
-    if [ -s "$tmp_exp" ]; then
-        while IFS= read -r line; do
-            [ -n "$line" ] || continue
+    cat "$tmp_exp" > /etc/exports
 
-            awk -v line="$line" '$0 != line' /etc/exports > "$tmp_old"
-            cat "$tmp_old" > /etc/exports
-        done < "$tmp_exp"
-    fi
-
-    if [ -s "$tmp_exp" ]; then
-        cat "$tmp_exp" >> /etc/exports
-    fi
-
-    rm -f "$tmp_exp" "$tmp_old"
+    rm -f "$tmp_exp"
 
     exportfs -r
-}
-
-nfs_share() {
-    local section="$1"
-
-    local enabled path clients options
-    local line
-
-    config_get_bool enabled "$section" enabled 0
-    config_get path "$section" path
-    config_get clients "$section" clients
-    config_get options "$section" options
-
-    [ -n "$path" ] || return 0
-    [ -n "$clients" ] || return 0
-
-    line="$(printf '%s\t%s(%s)' "$path" "$clients" "$options")"
-
-    if [ "$enabled" = "1" ]; then
-        if ! grep -qxF "$line" /etc/exports 2>/dev/null; then
-            printf '%s\n' "$line" >> /etc/exports
-            exportfs -r
-        fi
-    else
-        awk -v line="$line" '$0 != line' /etc/exports > /tmp/exports.$$ &&
-            cat /tmp/exports.$$ > /etc/exports
-
-        rm -f /tmp/exports.$$
-
-        exportfs -r
-    fi
 }
 
 nfs_share_stop() {
@@ -215,16 +173,16 @@ stop_service() {
 }
 
 start_service() {
-    config_load "$CONF"
+    sync_nfs_shares
 
-    config_foreach nfs_share share
+    config_load "$CONF"
     config_foreach nfs_mount mount
 }
 
 reload_service() {
-    config_load "$CONF"
-
     sync_nfs_shares
+
+    config_load "$CONF"
     config_foreach nfs_mount mount
 }
 
