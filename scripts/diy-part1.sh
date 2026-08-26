@@ -45,6 +45,9 @@ git clone https://github.com/rchen14b/luci-theme-glass package/luci-theme-glass
 [ -d package/luci-theme-argon ] && rm -rf package/luci-theme-argon
 git clone https://github.com/jerrykuku/luci-theme-argon package/luci-theme-argon
 
+[ -d package/luci-app-argon-config ] && rm -rf package/luci-app-argon-config
+git clone https://github.com/jerrykuku/luci-app-argon-config package/luci-app-argon-config
+
 [ -d package/luci-app-lucky ] && rm -rf package/luci-app-lucky
 git clone https://github.com/whzhni1/luci-app-lucky package/luci-app-lucky
 
