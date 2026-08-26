@@ -20,7 +20,7 @@ sed -i '/CONFIG_PACKAGE_mihomo-alpha/d' .config
 
 [ -f package/feeds/luci/luci-app-ksmbd/root/usr/share/luci/menu.d/luci-app-ksmbd.json ] && sed -i 's#admin/services/ksmbd#admin/nas/ksmbd#g' ./package/feeds/luci/luci-app-ksmbd/root/usr/share/luci/menu.d/luci-app-ksmbd.json
 
-[ -f package/feeds/luci/feeds/luci/applications/luci-app-nfs/root/etc/init.d/nfs ] && cp "$GITHUB_WORKSPACE/diy-part2.d/.diy/nfs" package/feeds/luci/feeds/luci/applications/luci-app-nfs/root/etc/init.d/nfs
+[ -f package/feeds/luci/luci-app-nfs/root/etc/init.d/nfs ] && cp "$GITHUB_WORKSPACE/diy-part2.d/.diy/nfs" package/feeds/luci/luci-app-nfs/root/etc/init.d/nfs
 
 [ -d package/base-files/files/etc/profile.d ] && cp "$GITHUB_WORKSPACE/diy-part2.d/.diy/30-sysinfo.sh" package/base-files/files/etc/profile.d/
 
