@@ -34,7 +34,7 @@ sed -i '/CONFIG_PACKAGE_luci-app-clientstatus/d' .config
 sed -i '/CONFIG_PACKAGE_mihomo-alpha/d' .config
 
 #enable fuse
-[ "$ARCHITECTURE" = "x86_64" ] && echo 'enable fuse for x86 fireware' && echo 'CONFIG_FUSE_FS=y' >> target/linux/x86/64/config-6.18
+[ "$ARCHITECTURE" = "x86_64" ] && echo 'enable fuse for x86 firmware' && echo 'CONFIG_FUSE_FS=y' >> target/linux/x86/64/config-6.18
 
 [ -f package/feeds/luci/luci-app-ksmbd/root/usr/share/luci/menu.d/luci-app-ksmbd.json ] && sed -i 's#admin/services/ksmbd#admin/nas/ksmbd#g' ./package/feeds/luci/luci-app-ksmbd/root/usr/share/luci/menu.d/luci-app-ksmbd.json
 
