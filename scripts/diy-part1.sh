@@ -33,8 +33,8 @@ git clone https://github.com/wukongdaily/luci-app-run.git package/app-run
 [ -d package/poweroffdevice ] && rm -rf package/poweroffdevice
 git clone https://github.com/sirpdboy/luci-app-poweroffdevice.git package/poweroffdevice
 
-[ -d package/openwrt-clashoo ] && rm -rf package/openwrt-clashoo
-git clone https://github.com/kenzok8/openwrt-clashoo.git package/openwrt-clashoo
+#[ -d package/openwrt-clashoo ] && rm -rf package/openwrt-clashoo
+#git clone https://github.com/kenzok8/openwrt-clashoo.git package/openwrt-clashoo
 
 [ -d package/kcptun ] && rm -rf package/kcptun
 git clone https://github.com/kuoruan/openwrt-kcptun.git package/kcptun
